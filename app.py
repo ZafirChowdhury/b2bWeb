@@ -20,7 +20,15 @@ def register():
         password = request.form.get("password")
         password_again = request.form.get("password_again")
 
-        return f"<h1>{username} {email} {password} {password_again}</h1>"
+        # Check Username or email is already exist
+        # check if password and password_again are the same
+        
+        query = "INSERT INTO users (user_name, email, password_hash) VALUES (%s, %s, %s)"
+        data = (username, email, password)
+        save(query, data)
+
+        return "<h1>User registered successfully</h1>"
+        
 
 
 @app.route("/login", methods=["GET", "POST"])
