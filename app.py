@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database import save
+from database import save, get
 
 app = Flask(__name__)
 
@@ -20,20 +20,30 @@ def register():
         return render_template("/register.html")
     
     if request.method == "POST":
-        username = request.form.get("username", None)
+        user_name = request.form.get("username", None)
         email = request.form.get("email", None)
         password = request.form.get("password", None)
         password_again = request.form.get("password_again", None)
 
-        if not username or not email or not password or not password_again:
+        if not user_name or not email or not password or not password_again:
             session["error_massage"] = "Please fill all the requred fields."
+            return redirect("/apology")
+        
+        if password != password_again:
+            session["error_massage"] = "Confermation password dose not match."
             return redirect("/apology")
 
         # Check Username or email is already exist
-        # check if password and password_again are the same
-        
+        query = "SELECT * FROM users WHERE user_name = %s or email = %s"
+        data = (user_name, email)
+        user_list =  get(query, data)
+        if len(user_list) >= 1:
+            session["error_massage"] = "Username allready taken or email allready in use."
+            return redirect("/apology")
+
+        # Hash the passowrds - NEXT TODO
         query = "INSERT INTO users (user_name, email, password_hash) VALUES (%s, %s, %s)"
-        data = (username, email, password)
+        data = (user_name, email, password)
         save(query, data)
 
         return "<h1>User registered successfully</h1>"

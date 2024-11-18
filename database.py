@@ -13,3 +13,9 @@ def save(query, data):
     db.commit()
     cur.close()
     return True
+
+
+def get(query, data):
+    cur = db.cursor(buffered=True)
+    cur.execute(query, data)
+    return cur.fetchall()
