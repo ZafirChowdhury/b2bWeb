@@ -52,17 +52,22 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    session.clear()
+
     if request.method == "GET":
         return render_template("/login.html")
     
     if request.method == "POST":
-        user_name = request.form.get("user_name")
-        password = request.form.get("password")
+        user_name = request.form.get("user_name", None)
+        password = request.form.get("password", None)
+
+        if not user_name or not password:
+            return redirect(url_for("apology", error_massage="Please fill all the requred fields"))
 
         # Check if the user exists or not
         user_list =  get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, user_name))
         if len(user_list) == 0:
-            return redirect("apology", error_massage="Username or Email dose not exist")
+            return redirect(url_for("apology", error_massage="Username or Email dose not exist"))
         
         # Checking password
         # (id, user_name, email, password_hash) 3 = password_hash
@@ -71,7 +76,8 @@ def login():
             session["user_id"] = user[0]
             return redirect(url_for("index"))
         else:
-            return redirect(url_for("/aplogy", error_massage="Wrong Password"))
+            return redirect(url_for("apology", error_massage="Wrong Password"))
+
 
 @app.route("/logout")
 def logout():
@@ -82,3 +88,11 @@ def logout():
 @app.route("/apology")
 def apology():
     return f"<h1>{request.args.get("error_massage", "No Error")}</h1>"
+
+# TODO
+# Degine Listing View Scene
+# Degine Make New Listing Page 
+# Make Listing Schema
+# Make View Listing Page
+# Make New Listing Page
+ 
