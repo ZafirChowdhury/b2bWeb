@@ -8,8 +8,8 @@ db = mysql.connector.connect(
 )
 
 cur = db.cursor(buffered=True)
-cur.execute("SELECT * FROM users WHERE user_name = %s or email = %s", ("Zafir", ""))
+cur.execute("SELECT * FROM users WHERE user_name = %s or email = %s", ("labiba", ""))
 # [() , ()]
 
 list_of_tuple = cur.fetchall()
-print(len(list_of_tuple))
+print(list_of_tuple)
