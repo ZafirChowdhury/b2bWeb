@@ -89,10 +89,27 @@ def logout():
 def apology():
     return f"<h1>{request.args.get("error_massage", "No Error")}</h1>"
 
+
 # TODO
 # Degine Listing View Scene
 # Degine Make New Listing Page 
 # Make Listing Schema
 # Make View Listing Page
 # Make New Listing Page
- 
+# Actution T_T I wanna die
+
+# BABI Idea
+# Trending Listings [What People are looking at]
+# Cupone / Free Dilevery
+
+# Listing
+# Title
+# Discription
+# Picture (Image BB / Preload)
+# Tag
+# Price
+# Posting Date
+# Comment
+# End Aution by Seller
+# End Aution Date (Maybe)
+#  
