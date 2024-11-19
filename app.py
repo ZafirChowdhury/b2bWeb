@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database import save, get
+import database
 
 app = Flask(__name__)
 
@@ -40,12 +40,12 @@ def register():
             return redirect(url_for("apology", error_massage="Confermation password dose not match."))
 
         # Check Username or email is already exist
-        user_list =  get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, email))
+        user_list =  database.get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, email))
         if len(user_list) >= 1:
             return redirect(url_for("apology", error_massage="Username allready taken or email allready in use."))
 
         # Hasing the passowrd and saving the user to the database
-        save("INSERT INTO users (user_name, email, password_hash) VALUES (%s, %s, %s)", (user_name, email, str(generate_password_hash(password))))
+        database.save("INSERT INTO users (user_name, email, password_hash) VALUES (%s, %s, %s)", (user_name, email, str(generate_password_hash(password))))
 
         return redirect("login")
         
@@ -65,7 +65,7 @@ def login():
             return redirect(url_for("apology", error_massage="Please fill all the requred fields"))
 
         # Check if the user exists or not
-        user_list =  get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, user_name))
+        user_list =  database.get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, user_name))
         if len(user_list) == 0:
             return redirect(url_for("apology", error_massage="Username or Email dose not exist"))
         
