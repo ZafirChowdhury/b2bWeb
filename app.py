@@ -1,12 +1,14 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
+import os
+
 import database
 
 app = Flask(__name__)
 
 # Session Setup
-app.secret_key = "SSS"
+app.secret_key = os.urandom(24)
 app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route("/", methods=["GET", "POST"])
@@ -69,7 +71,7 @@ def login():
         if len(user_list) == 0:
             return redirect(url_for("apology", error_massage="Username or Email dose not exist"))
         
-        # Checking password
+        # Checking Password
         # (id, user_name, email, password_hash) 3 = password_hash
         user = user_list[0]
         if check_password_hash(user[3], password):
@@ -88,28 +90,3 @@ def logout():
 @app.route("/apology")
 def apology():
     return f"<h1>{request.args.get("error_massage", "No Error")}</h1>"
-
-
-# TODO
-# Degine Listing View Scene
-# Degine Make New Listing Page 
-# Make Listing Schema
-# Make View Listing Page
-# Make New Listing Page
-# Actution T_T I wanna die
-
-# BABI Idea
-# Trending Listings [What People are looking at]
-# Cupone / Free Dilevery
-
-# Listing
-# Title
-# Discription
-# Picture (Image BB / Preload)
-# Tag
-# Price
-# Posting Date
-# Comment
-# End Aution by Seller
-# End Aution Date (Maybe)
-#  
