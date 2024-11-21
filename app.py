@@ -118,10 +118,10 @@ def new_listing():
 
         if auction_end_time:
             auction_end_time = helper.convert_html_date_time_to_time(auction_end_time)
-            database.save("INSERT INTO listings (title, description, price, auction_end_time) VALUES (%s, %s, %s, %s)", (title, description, price, auction_end_time))
+            database.save("INSERT INTO listings (user_id, title, description, price, auction_end_time) VALUES (%s, %s, %s, %s, %s)", (session.get("user_id", 0), title, description, price, auction_end_time))
 
         else:
-            database.save("INSERT INTO listings (title, description, price) VALUES (%s, %s, %s)", (title, description, price))
+            database.save("INSERT INTO listings (user_id, title, description, price) VALUES (%s, %s, %s, %s)", (session.get("user_id", 0),title, description, price))
 
         # Image Processing
         return "TODO"
