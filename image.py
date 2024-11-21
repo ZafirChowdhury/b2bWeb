@@ -3,7 +3,7 @@ import requests
 
 url = "https://api.imgbb.com/1/upload"
 api_key = "37c8ea51af6c6c2e9bf543566c763169"
-expiration = "2624016" # 1 month = 2624016 secs
+expiration = "86400" # 1 month = 2624016 secs, 1 day = 86400
 
 def upload_image_to_imgbb(image_path):
     with open(image_path, "rb") as file:

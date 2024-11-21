@@ -3,9 +3,11 @@ CREATE TABLE users (
     user_name VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+
     location VARCHAR(255),
     phone_number VARCHAR(13),
     user_image_link VARCHAR(512),
+
     PRIMARY KEY (user_id)
 );
 
@@ -15,10 +17,12 @@ CREATE TABLE listings (
     title VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     sold BOOLEAN NOT NULL DEFAULT FALSE,
-    description VARCHAR(6000),
+    description VARCHAR(6000) NOT NULL,
+
     image_url VARCHAR(512),
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     auction_end_time TIMESTAMP,
+    
     PRIMARY KEY (listing_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
@@ -41,6 +45,11 @@ CREATE TABLE profile_reviews (
     PRIMARY KEY (review_id),
     FOREIGN KEY (made_by_user_id) REFERENCES users(user_id) ON DELETE SET NULL,
     FOREIGN KEY (for_user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE test (
+    test_id INT,
+    test_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
