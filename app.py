@@ -5,6 +5,8 @@ import os
 
 import database
 import helper
+from image import upload_image_to_imgbb
+from base64 import b64encode
 
 app = Flask(__name__)
 
@@ -105,7 +107,7 @@ def new_listing():
         title = request.form.get("title", None)
         description = request.form.get("description", None)
         price = request.form.get("price", None)
-        image = None
+        image = request.files.get("image", None)
         auction_end_time = request.form.get("auction_end_time", None)
 
         if not title or not description or not price:
@@ -116,12 +118,16 @@ def new_listing():
         if not price:
             return redirect(url_for(apology, error_massage="Wrong Price Format"))
 
+        # TODO if time and image:
         if auction_end_time:
-            auction_end_time = helper.convert_html_date_time_to_time(auction_end_time)
+            auction_end_time = helper.convert_html_date_time_to_python_datetime(auction_end_time)
             database.save("INSERT INTO listings (user_id, title, description, price, auction_end_time) VALUES (%s, %s, %s, %s, %s)", (session.get("user_id", 0), title, description, price, auction_end_time))
 
         else:
             database.save("INSERT INTO listings (user_id, title, description, price) VALUES (%s, %s, %s, %s)", (session.get("user_id", 0),title, description, price))
 
-        # Image Processing
+        if image:
+            print("UPLOADING IMAGE")
+            image_url = upload_image_to_imgbb(b64encode(image.read()))
+
         return "TODO"

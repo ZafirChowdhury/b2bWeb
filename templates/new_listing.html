@@ -4,13 +4,13 @@
 
 {% block main %}
 
-    <form action="/new_listing" method="post">
+    <form action="/new_listing" method="post" enctype="multipart/form-data">
         
         <input name="title" type="text" placeholder="Title" required>
         <textarea name="description" rows="4" cols="50" placeholder="Description of your listing" required></textarea>
         <input name="price" type="number" step="0.01" min="0" placeholder="Price" required>
 
-        <input name="iamge" type="file" accept="image/*">
+        <input name="image" type="file" accept="image/*">
         <input name="auction_end_time" type="datetime-local">
 
         <button type="submit">Submit</button>
