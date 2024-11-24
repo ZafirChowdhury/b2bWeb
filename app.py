@@ -3,10 +3,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 import os
 
+from base64 import b64encode
+
 import database
 import helper
-from image import upload_image_to_imgbb
-from base64 import b64encode
 
 app = Flask(__name__)
 
@@ -128,6 +128,6 @@ def new_listing():
 
         if image:
             print("UPLOADING IMAGE")
-            image_url = upload_image_to_imgbb(b64encode(image.read()))
+            image_url = helper.upload_image_to_imgbb(b64encode(image.read()))
 
         return "TODO"
