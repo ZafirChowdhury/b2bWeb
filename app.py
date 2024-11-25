@@ -118,16 +118,18 @@ def new_listing():
         if not price:
             return redirect(url_for(apology, error_massage="Wrong Price Format"))
 
-        # TODO if time and image:
+        if image:
+            image_url = helper.upload_image_to_imgbb(b64encode(image.read()))
+        else:
+            image_url = ""
+
         if auction_end_time:
             auction_end_time = helper.convert_html_date_time_to_python_datetime(auction_end_time)
-            database.save("INSERT INTO listings (user_id, title, description, price, auction_end_time) VALUES (%s, %s, %s, %s, %s)", (session.get("user_id", 0), title, description, price, auction_end_time))
+            database.save("INSERT INTO listings (user_id, title, description, price, image_url, auction_end_time) VALUES (%s, %s, %s, %s, %s, %s)", 
+                          (session.get("user_id", 0), title, description, price, image_url, auction_end_time))
 
         else:
-            database.save("INSERT INTO listings (user_id, title, description, price) VALUES (%s, %s, %s, %s)", (session.get("user_id", 0),title, description, price))
-
-        if image:
-            print("UPLOADING IMAGE")
-            image_url = helper.upload_image_to_imgbb(b64encode(image.read()))
+            database.save("INSERT INTO listings (user_id, title, description, price, image_url) VALUES (%s, %s, %s, %s, %s)", 
+                          (session.get("user_id", 0),title, description, price, image_url))
 
         return "TODO"
