@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 import os
 
+from datetime import timedelta
 from base64 import b64encode
 
 import database
@@ -15,6 +16,7 @@ app = Flask(__name__)
 # Session Setup
 app.secret_key = os.urandom(24)
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
