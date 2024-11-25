@@ -29,8 +29,6 @@ def upload_image_to_imgbb(image_base64):
     
     response = requests.post(url, payload)
 
-    print(response.json())
-    
     if response.status_code == 200:
         return response.json()['data']['url']
     else:

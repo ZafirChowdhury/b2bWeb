@@ -8,6 +8,8 @@ from base64 import b64encode
 import database
 import helper
 
+MAX_IAMGE_SIZE = 512 * 1024
+
 app = Flask(__name__)
 
 # Session Setup
@@ -111,7 +113,7 @@ def new_listing():
         auction_end_time = request.form.get("auction_end_time", None)
 
         if not title or not description or not price:
-            return redirect(url_for(apology, error_massage="Please fill all the requred fiedls."))
+            return redirect(url_for("apology", error_massage="Please fill all the requred fiedls."))
         
         # Checking and converting price
         price = helper.check_is_float_and_convert(price)
@@ -119,6 +121,13 @@ def new_listing():
             return redirect(url_for(apology, error_massage="Wrong Price Format"))
 
         if image:
+            if image.mimetype not in ["image/jpeg", "image/png"]:
+                return redirect(url_for("apology", error_massage="Invalid image format, only png and jpeg are allowed"))
+            
+            if len(image.read()) > MAX_IAMGE_SIZE:
+                return redirect(url_for("apology", error_massage="Image size exedes 512KB."))
+            
+            image.seek(0)
             image_url = helper.upload_image_to_imgbb(b64encode(image.read()))
         else:
             image_url = ""
