@@ -1,20 +1,19 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-import os
-
 from datetime import timedelta
 from base64 import b64encode
 
 import database
 import helper
+import key
 
 MAX_IAMGE_SIZE = 512 * 1024
 
 app = Flask(__name__)
 
 # Session Setup
-app.secret_key = os.urandom(24)
+app.secret_key = key.get_flask_secret_key()
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 
