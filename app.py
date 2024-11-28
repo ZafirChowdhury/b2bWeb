@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from markupsafe import escape
+
 from datetime import timedelta
 from base64 import b64encode
 
@@ -143,3 +145,12 @@ def new_listing():
                           (session.get("user_id", 0),title, description, price, image_url))
 
         return "TODO"
+
+@app.route("/view_listing/<int:listing_id>", methods=["GET", "POST"])
+def view_listing(listing_id):
+    if request.method == "GET":
+        return f"{escape(listing_id)}"
+    
+    if request.method == "POST":
+        return "TODO"
+    
