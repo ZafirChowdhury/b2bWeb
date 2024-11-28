@@ -22,7 +22,7 @@ def save(query, data):
 
 
 def get(query, data):
-    cur = db.cursor(buffered=True)
+    cur = db.cursor(buffered=True, dictionary=True)
 
     cur.execute(query, data)
     

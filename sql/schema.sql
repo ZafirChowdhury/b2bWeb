@@ -22,7 +22,7 @@ CREATE TABLE listings (
 
     image_url VARCHAR(512),
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    auction_end_time TIMESTAMP,
+    auction_end_time TIMESTAMP DEFAULT '2000-01-01 00:00:00',
     
     PRIMARY KEY (listing_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -47,12 +47,6 @@ CREATE TABLE profile_reviews (
     FOREIGN KEY (made_by_user_id) REFERENCES users(user_id) ON DELETE SET NULL,
     FOREIGN KEY (for_user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
-
-CREATE TABLE test (
-    test_id INT,
-    test_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 
 -- RESET DATABAE
 drop schema test;
