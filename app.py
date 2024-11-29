@@ -80,7 +80,6 @@ def login():
             return redirect(url_for("apology", em="Username or Email dose not exist"))
         
         # Checking Password
-        # user = (id, user_name, email, password_hash) [3] = password_hash
         user = user_list[0]
         if check_password_hash(user.get("password_hash"), password):
             session["user_id"] = user.get("user_id")
@@ -143,8 +142,11 @@ def new_listing():
         else:
             database.save("INSERT INTO listings (user_id, title, description, price, image_url) VALUES (%s, %s, %s, %s, %s)", 
                           (session.get("user_id", 0),title, description, price, image_url))
+        
+        # Getting the id of listing
+        listing_id = database.get("SELECT * FROM listings ORDER BY listing_id DESC LIMIT 1", ())[0].get("listing_id")
 
-        return "TODO"
+        return redirect(url_for("view_listing", listing_id=listing_id))
 
 
 @app.route("/view_listing/<int:listing_id>", methods=["GET", "POST"])
