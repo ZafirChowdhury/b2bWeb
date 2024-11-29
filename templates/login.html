@@ -5,13 +5,17 @@
 {% block main %}
 
     <form action="/login" method="post">
+        <div class="form-group">
+            <label for="user_name">Username or Email</label>
+            <input name="user_name" type="text" id="user_name" placeholder="Username or Email" required>
+        </div>
 
-        <input name="user_name" type="text" placeholder="Username or Email" required>
-
-        <input name="password" type="password" placeholder="Password" required>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input name="password" type="password" id="password" placeholder="Password" required>
+        </div>
         
         <button type="submit">Login</button>
-
     </form>
 
 {% endblock %}

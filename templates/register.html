@@ -4,16 +4,28 @@
 
 {% block main %}
 
-    <form action="/register" method="post">
+<form action="/register" method="post">
+    <div class="form-group">
+        <label for="user_name">Username</label>
+        <input name="user_name" type="text" id="user_name" placeholder="Username" required>
+    </div>
 
-        <input name="user_name" type="text" placeholder="Username" required>
-        <input name="email" type="email" placeholder="Eamil" required>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input name="email" type="email" id="email" placeholder="Email" required>
+    </div>
 
-        <input name="password" type="password" placeholder="Password" required>
-        <input name="password_again" type="password" placeholder="Password Again" required>
-        
-        <button type="submit">Register</button>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input name="password" type="password" id="password" placeholder="Password" required>
+    </div>
 
-    </form>
+    <div class="form-group">
+        <label for="password_again">Password Again</label>
+        <input name="password_again" type="password" id="password_again" placeholder="Password Again" required>
+    </div>
+    
+    <button type="submit">Register</button>
+</form>
 
 {% endblock %}
