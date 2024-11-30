@@ -192,7 +192,8 @@ def my_listings():
     if not session.get("user_id", None):
             return redirect(url_for("login"))
 
-    return "TODO : My Listings"
+    listings = database.get("SELECT * FROM listings WHERE user_id = %s ORDER BY listing_id DESC", (session.get("user_id"), ))
+    return render_template("/listings.html", listings=listings, page_title="My Listings")
 
 
 @app.route("/admin", methods=["GET", "POST"])
