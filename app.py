@@ -30,7 +30,12 @@ def index():
         
     # TODO Search Listing
     if request.method == "POST":
-        return "<h1>TODO</h1>"
+        query = request.form.get("query", None)
+
+        if not query:
+            return redirect(url_for("apology", em="Missign Query"))
+        
+        return f"{query}"
     
 
 @app.route("/register", methods=["GET", "POST"])
