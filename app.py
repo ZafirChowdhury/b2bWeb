@@ -26,8 +26,9 @@ def index():
         if not session.get("user_id", None):
             return redirect(url_for("login"))
         
-        return f"<h1>{session.get("user_id", "NO USER IS LOGGED IN")}</h1>"
+        return render_template("home.html")
         
+    # TODO Search Listing
     if request.method == "POST":
         return "<h1>TODO</h1>"
     
