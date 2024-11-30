@@ -58,7 +58,7 @@ def register():
             return redirect(url_for("apology", em="Confermation password dose not match."))
 
         # Check Username or email is already exist
-        user_list =  database.get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, email))
+        user_list = database.get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, email))
         if len(user_list) >= 1:
             return redirect(url_for("apology", em="Username allready taken or email allready in use."))
 
