@@ -26,7 +26,9 @@ def index():
         if not session.get("user_id", None):
             return redirect(url_for("login"))
         
-        return render_template("home.html")
+        listings = database.get("SELECT * FROM listings WHERE sold = %s AND user_id != %s ORDER BY listing_id DESC LIMIT 20", (False, session.get("user_id")))
+
+        return render_template("home.html", listings=listings)
         
     # TODO Search Listing
     if request.method == "POST":

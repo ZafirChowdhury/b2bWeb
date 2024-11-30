@@ -6,11 +6,26 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form class="d-flex" action="/" method="post">
+                <form class="d-flex mb-5" action="/" method="post">
                     <input class="form-control me-2" type="search" name="query" placeholder="Search listings" aria-label="Search" required>
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
+        </div>
+
+        <!--Listings-->
+        <div class="row mx-3">
+            {% for listing in listings %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <img src="{{ listing.image_url }}" class="card-img-top img-fluid" alt="" style="max-height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <a href="view_listing/{{ listing.listing_id }}"><h5 class="card-title">{{ listing.title }}</h5></a>
+                        <p class="card-text">${{ listing.price }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
