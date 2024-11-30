@@ -91,6 +91,7 @@ def login():
         user = user_list[0]
         if check_password_hash(user.get("password_hash"), password):
             session["user_id"] = user.get("user_id")
+            session["user_type"] = user.get("user_type")
             return redirect(url_for("index"))
         else:
             return redirect(url_for("apology", em="Wrong Password"))
