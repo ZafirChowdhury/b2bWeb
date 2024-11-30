@@ -34,7 +34,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/my_listing">My Listings</a>
+                            <a class="nav-link" href="/my_listings">My Listings</a>
                         </li>
 
                         <li class="nav-item">
@@ -45,7 +45,7 @@
                             <a class="nav-link" href="/logout">Logout</a>
                         </li>
 
-                        {% if %}
+                        {% if session['is_admin'] %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin">Admin</a>
                             </li>

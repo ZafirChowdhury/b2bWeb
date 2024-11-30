@@ -91,7 +91,7 @@ def login():
         user = user_list[0]
         if check_password_hash(user.get("password_hash"), password):
             session["user_id"] = user.get("user_id")
-            session["user_type"] = user.get("user_type")
+            session["is_admin"] = user.get("is_admin")
             return redirect(url_for("index"))
         else:
             return redirect(url_for("apology", em="Wrong Password"))
@@ -173,4 +173,39 @@ def view_listing(listing_id):
         
     if request.method == "POST":
         return "TODO"
+
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    if not session.get("user_id", None):
+            return redirect(url_for("login"))
+    
+    if request.method == "GET":
+        return "TODO : Profile GET"
+
+    if request.method == "POST":
+        return "TODO : Profile POST"
+
+
+@app.route("/my_listings", methods=["GET"])
+def my_listings():
+    if not session.get("user_id", None):
+            return redirect(url_for("login"))
+
+    return "TODO : My Listings"
+
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if not session.get("user_id", None):
+            return redirect(url_for("login"))
+    
+    if not session.get("is_admin"):
+        return redirect(url_for("apology"), em="Acess denied")
+
+    if request.method == "GET":
+        return "TODO : Admin GET"
+    
+    if request.method == "POST":
+        return "TODO : Admin POST"
     
