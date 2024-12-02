@@ -6,8 +6,8 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form class="d-flex mb-5" action="/" method="post">
-                    <input class="form-control me-2" type="search" name="query" placeholder="Search listings" aria-label="Search" required>
+                <form class="d-flex mb-5" action="/" method="post" onsubmit="return validateSearch()">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Search listings" aria-label="Search" required id="query">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
@@ -28,5 +28,16 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        function validateSearch() {
+            var query = document.getElementById('query').value;
+            if (query.length < 3) {
+                alert('Please enter at least 3 characters for the search.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 {% endblock %}

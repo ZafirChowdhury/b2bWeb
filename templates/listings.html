@@ -6,17 +6,29 @@
     <!--Listings-->
     <div class="container mt-5">
         <div class="row mx-3">
-            {% for listing in listings %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <img src="{{ listing.image_url }}" class="card-img-top img-fluid" alt="" style="max-height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <a href="view_listing/{{ listing.listing_id }}"><h5 class="card-title">{{ listing.title }}</h5></a>
-                        <p class="card-text">${{ listing.price }}</p>
+            {% if listings %}
+
+                {% for listing in listings %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <img src="{{ listing.image_url }}" class="card-img-top img-fluid" alt="" style="max-height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <a href="view_listing/{{ listing.listing_id }}"><h5 class="card-title">{{ listing.title }}</h5></a>
+                                <p class="card-text">${{ listing.price }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+
+                <div class="col-12">
+                    <div class="alert alert-warning text-center" role="alert">
+                        No listings found.
                     </div>
                 </div>
-            </div>
-            {% endfor %}
+                
+            {% endif %}
         </div>
     </div>
 {% endblock %}

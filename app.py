@@ -1,8 +1,6 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from markupsafe import escape
-
 from datetime import timedelta
 from base64 import b64encode
 
@@ -30,15 +28,22 @@ def index():
 
         return render_template("home.html", listings=listings)
         
-    # TODO Search Listing
     if request.method == "POST":
         query = request.form.get("query", None)
 
         if not query:
             return redirect(url_for("apology", em="Missign Query"))
-        
-        return f"{query}"
-    
+
+        if len(query) < 3:
+            return redirect(url_for("apology", em="Search query must have at leat 3 chracters"))
+
+        listings = database.get("SELECT * FROM listings WHERE title LIKE %s AND user_id != %s", ("%" + str(query) +"%", session.get("user_id")))
+
+        if len(listings) == 0:
+            listings = None
+
+        return render_template("/listings.html", listings=listings, page_title="Search")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
