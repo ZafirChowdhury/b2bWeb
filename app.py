@@ -187,7 +187,7 @@ def profile():
     
     if request.method == "GET":
         user = database.get("SELECT * FROM users WHERE user_id = %s", (session.get("user_id"), ))[0]
-        return render_template("/profile.html", user=user)
+        return render_template("/pzrofile.html", user=user)
 
     if request.method == "POST":
         return "TODO : Profile POST"
