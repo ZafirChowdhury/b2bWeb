@@ -28,6 +28,19 @@ CREATE TABLE listings (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+CREATE TABLE bids (
+    bid_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT,
+    listing_id INT,
+
+    ammount DECIMAL(10, 2) NOT NULL,
+    date TIMESTAMP DEFAULT NOT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY(bid_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE
+);
+
 CREATE TABLE comments (
     comment_id INT NOT NULL AUTO_INCREMENT,
     user_id INT,

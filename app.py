@@ -187,9 +187,9 @@ def profile():
     
     if request.method == "GET":
         user = database.get("SELECT * FROM users WHERE user_id = %s", (session.get("user_id"), ))[0]
-        return render_template("/pzrofile.html", user=user)
+        return render_template("/profile.html", user=user)
 
-    if request.method == "POST":
+    if request.method == "FPOST":
         return "TODO : Profile POST"
 
 
@@ -216,3 +216,14 @@ def admin():
     if request.method == "POST":
         return "TODO : Admin POST"
     
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+def edit_profile():
+    if not session.get("user_id", None):
+        return redirect("login")
+
+    if request.method == "GET":
+        return "TODO : EDIT PROFILE GET"
+
+    if request.method == "POST":
+        return "TODO : EDIT PROFILE POST"
