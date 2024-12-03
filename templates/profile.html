@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}: Profile{% endblock %}
+
+{% block main %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Profile</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8 text-left">
+                                <h4>{{ user.user_name }}</h4>
+                                <p><strong>Email:</strong> {{ user.email }}</p>
+                                <p><strong>Location:</strong> {{ user.location }}</p>
+                                <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <img src="{{ user.user_image_link }}" alt="Profile Picture" class="rounded-circle mb-3" width="150" height="150">
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-md-2">
+                                <a href="/edit_profile" class="btn btn-primary btn-block">Edit Profile</a>
+                            </div>
+                            <div class="col-md-3">
+                                <form action="/delete_profile" method="post">
+                                    <button type="submit" class="btn btn-danger btn-block">Delete Profile</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

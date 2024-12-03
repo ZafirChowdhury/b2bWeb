@@ -186,7 +186,8 @@ def profile():
             return redirect(url_for("login"))
     
     if request.method == "GET":
-        return "TODO : Profile GET"
+        user = database.get("SELECT * FROM users WHERE user_id = %s", (session.get("user_id"), ))[0]
+        return render_template("/profile.html", user=user)
 
     if request.method == "POST":
         return "TODO : Profile POST"
