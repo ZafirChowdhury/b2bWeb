@@ -223,7 +223,7 @@ def edit_profile():
         return redirect("login")
 
     if request.method == "GET":
-        return "TODO : EDIT PROFILE GET"
+        return render_template("/edit_profile.html")
 
     if request.method == "POST":
         return "TODO : EDIT PROFILE POST"
