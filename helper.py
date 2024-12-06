@@ -34,3 +34,7 @@ def upload_image_to_imgbb(image_base64):
         return response.json()['data']['url']
     else:
         return ""
+
+
+def get_current_time():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
