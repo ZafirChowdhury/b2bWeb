@@ -179,8 +179,9 @@ def view_listing(listing_id):
         
         return render_template("/view_listing.html", listing=listings[0])
         
+    # Bidding System
     if request.method == "POST":
-        return "TODO"
+        return f"TOOD : Bidding System POST : You are trying to bid on {listing_id}" 
 
 
 @app.route("/profile", methods=["GET", "POST"])
