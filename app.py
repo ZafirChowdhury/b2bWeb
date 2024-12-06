@@ -129,8 +129,9 @@ def new_listing():
         price = request.form.get("price", None)
         image = request.files.get("image", None)
         auction_end_time = request.form.get("auction_end_time", None)
+        tag = request.form.get("tag", None)
 
-        if not title or not description or not price:
+        if not title or not description or not price or not tag:
             return redirect(url_for("apology", em="Please fill all the requred fiedls."))
         
         # Checking and converting price
@@ -152,12 +153,12 @@ def new_listing():
 
         if auction_end_time:
             auction_end_time = helper.convert_html_date_time_to_python_datetime(auction_end_time)
-            database.save("INSERT INTO listings (user_id, title, description, price, image_url, auction_end_time) VALUES (%s, %s, %s, %s, %s, %s)", 
-                          (session.get("user_id", 0), title, description, price, image_url, auction_end_time))
+            database.save("INSERT INTO listings (user_id, title, description, price, image_url, auction_end_time, tag) VALUES (%s, %s, %s, %s, %s, %s, %s)", 
+                          (session.get("user_id", 0), title, description, price, image_url, auction_end_time, tag))
 
         else:
-            database.save("INSERT INTO listings (user_id, title, description, price, image_url) VALUES (%s, %s, %s, %s, %s)", 
-                          (session.get("user_id", 0),title, description, price, image_url))
+            database.save("INSERT INTO listings (user_id, title, description, price, image_url, tag) VALUES (%s, %s, %s, %s, %s, %s)", 
+                          (session.get("user_id", 0),title, description, price, image_url, tag))
         
         # Getting the id of listing
         listing_id = database.get("SELECT * FROM listings ORDER BY listing_id DESC LIMIT 1", ())[0].get("listing_id")
