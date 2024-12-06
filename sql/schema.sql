@@ -15,6 +15,7 @@ CREATE TABLE users (
 CREATE TABLE listings (
     listing_id INT NOT NULL AUTO_INCREMENT,
     user_id INT,
+    sold_to INT,
 
     title VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
@@ -27,7 +28,8 @@ CREATE TABLE listings (
     auction_end_time TIMESTAMP DEFAULT '2000-01-01 00:00:00',
     
     PRIMARY KEY (listing_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (sold_to) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE tags(
