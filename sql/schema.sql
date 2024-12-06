@@ -15,10 +15,12 @@ CREATE TABLE users (
 CREATE TABLE listings (
     listing_id INT NOT NULL AUTO_INCREMENT,
     user_id INT,
+
     title VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     sold BOOLEAN NOT NULL DEFAULT FALSE,
     description VARCHAR(6000) NOT NULL,
+    tag VARCHAR(255) NOT NULL,
 
     image_url VARCHAR(512),
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -28,13 +30,17 @@ CREATE TABLE listings (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+CREATE TABLE tags(
+    tag VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE bids (
     bid_id INT NOT NULL AUTO_INCREMENT,
     user_id INT,
     listing_id INT,
 
     ammount DECIMAL(10, 2) NOT NULL,
-    date TIMESTAMP DEFAULT NOT CURRENT_TIMESTAMP,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(bid_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,

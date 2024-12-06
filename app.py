@@ -24,7 +24,8 @@ def index():
         if not session.get("user_id", None):
             return redirect(url_for("login"))
         
-        listings = database.get("SELECT * FROM listings WHERE sold = %s AND user_id != %s ORDER BY listing_id DESC LIMIT 20", (False, session.get("user_id")))
+        listings = database.get("SELECT * FROM listings WHERE sold = %s AND user_id != %s ORDER BY listing_id DESC LIMIT 20", 
+                                (False, session.get("user_id")))
 
         return render_template("home.html", listings=listings)
         
@@ -119,7 +120,8 @@ def new_listing():
         return redirect(url_for("login"))
 
     if request.method == "GET":
-        return render_template("new_listing.html")
+        tag_list = database.get("SELECT * FROM tags", ()) # [{tag : "tag1"}, {tag : "tag2"}]
+        return render_template("new_listing.html", tag_list=tag_list)
     
     if request.method == "POST":
         title = request.form.get("title", None)

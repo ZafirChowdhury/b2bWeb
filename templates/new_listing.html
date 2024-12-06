@@ -29,6 +29,15 @@
                             </div>
 
                             <div class="form-group mb-3">
+                                <label for="tag">Tag</label>
+                                <select name="tag" class="form-control" id="tag">
+                                    {% for tag in tag_list %}
+                                        <option value="{{ tag['tag'] }}">{{ tag['tag'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label for="image">Image</label>
                                 <input name="image" type="file" class="form-control-file" id="image" accept="image/*" onchange="previewImage(event)">
                                 <img id="image-preview" src="#" alt="Image Preview" class="img-fluid mt-3" style="display: none; max-width: 100%;">
