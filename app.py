@@ -230,3 +230,15 @@ def edit_profile():
 
     if request.method == "POST":
         return "TODO : EDIT PROFILE POST"
+
+
+@app.route("/tag/<tag>", methods=["GET"])
+def tag(tag):
+    if not session.get("user_id", None):
+            return redirect(url_for("login"))
+
+    if not tag:
+        return redirect(url_for("apology", em="Tag dose not exist"))
+
+    listings = database.get("SELECT * FROM listings WHERE tag = %s ORDER BY listing_id DESC", (tag , ))
+    return render_template("/listings.html", listings=listings, page_title="My Listings")

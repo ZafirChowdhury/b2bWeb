@@ -11,7 +11,7 @@
                 <h1 class="fw-bold">{{ listing.title }}</h1>
                 <p class="text-muted">{{ listing.description }}</p>
                 <h3 class="text-primary fw-bold">{{ listing.price }}</h3>
-                <p><strong>Tag:</strong> {{ listing.tag }}</p>
+                <p><strong>Tag:</strong><a href="/tag/{{ listing.tag }}"> {{ listing.tag }} </a></p>
 
                 <!--Time-->
                 <p><strong>Auction End Time:</strong> <span id="auction-end-time">{{ listing.auction_end_time }}</span></p>
