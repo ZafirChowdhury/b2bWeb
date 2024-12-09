@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 from base64 import b64encode
 
 import database
@@ -184,8 +184,30 @@ def view_listing(listing_id):
         
         if len(listings) == 0:
             return redirect(url_for("apology", em="Listing dose not exist"))
+        
+        listing = listings[0]
 
-        return render_template("/view_listing.html", listing=listings[0])
+        # Checking auction time
+        auction_end_time = listing.get("auction_end_time")
+        defult_no_end_time = datetime(2000, 1, 1, 0, 0, 0)
+        current_time = datetime.now()
+
+        # Update to sold, if time has ended
+        if not auction_end_time == defult_no_end_time: # There is a user given time
+            if auction_end_time < current_time: # Auction has ended
+                # Getting user_id of the hiest bidder
+                bids = database.get("SELECT user_id FROM bids WHERE listing_id = %s ORDER BY ammount ASC", 
+                            (listing_id, ))
+
+                if len(bids) == 0:
+                    sold_to = session.get("user_id")
+                else:
+                    sold_to = bids[0].get("user_id")
+
+                database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
+                            (sold_to, True, listing_id))
+
+        return render_template("/view_listing.html", listing=listing)
 
 
 @app.route("/bid/<int:listing_id>", methods=["POST"])

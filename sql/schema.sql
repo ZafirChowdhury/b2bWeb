@@ -48,27 +48,3 @@ CREATE TABLE bids (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE
 );
-
-CREATE TABLE comments (
-    comment_id INT NOT NULL AUTO_INCREMENT,
-    user_id INT,
-    listing_id INT,
-    date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (comment_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
-    FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE
-);
-
-CREATE TABLE profile_reviews (
-    review_id INT NOT NULL AUTO_INCREMENT,
-    made_by_user_id INT,
-    for_user_id INT,
-    date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (review_id),
-    FOREIGN KEY (made_by_user_id) REFERENCES users(user_id) ON DELETE SET NULL,
-    FOREIGN KEY (for_user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- RESET DATABAE
-drop schema test;
-create schema test;
