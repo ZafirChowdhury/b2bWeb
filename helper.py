@@ -15,7 +15,7 @@ def check_is_float_and_convert(str):
         return float(str)
     
     except ValueError:
-        return False
+        return str
 
 
 def upload_image_to_imgbb(image_base64):

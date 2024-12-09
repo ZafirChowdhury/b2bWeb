@@ -187,9 +187,34 @@ def view_listing(listing_id):
 
 @app.route("/bid/<int:listing_id>", methods=["POST"])
 def bid(listing_id):
-    bid_ammout = request.form.get("bid_amount")
+    if not listing_id:
+        return redirect(url_for("apology", em="Missing URL paramiters"))
 
-    return f"You Bidded {bid_ammout} for the listing {listing_id}"
+    if not session.get("user_id", None):
+            return redirect(url_for("login"))
+    
+    bid_ammout = helper.check_is_float_and_convert(request.form.get("bid_amount"))
+
+    if not bid_ammout:
+        return redirect(url_for("apology", em="Please enter valid bid ammout"))
+    
+    listings = database.get("SELECT sold, user_id FROM listings WHERE listing_id = %s", (listing_id, ))
+
+    # Listing dose not exist
+    if len(listings) == 0:
+        return redirect(url_for("apology", em="Listing dose not exist"))
+    
+    # Listing is sold 
+    if listings[0].get("sold"):
+        return redirect(url_for("apology", em="Listing is sold"))
+    
+    if listings[0].get("user_id") == session.get("user_id"):
+        return redirect(url_for("apology", em="You cannont bid on your own listing"))
+
+    database.save("INSERT INTO bids (user_id, listing_id, ammount) VALUES (%s, %s, %s)", 
+                  (session.get("user_id"), listing_id, bid_ammout))
+
+    return redirect(url_for("view_listing", listing_id=listing_id))
 
 
 @app.route("/profile", methods=["GET", "POST"])
