@@ -169,15 +169,18 @@ def new_listing():
 
 @app.route("/view_listing/<int:listing_id>", methods=["GET", "POST"])
 def view_listing(listing_id):
+    if not listing_id:
+        return redirect(url_for("apology", em="Missing URL paramiters"))
+
     if not session.get("user_id", None):
             return redirect(url_for("login"))
-    # TODO : Check if a bidding exists for the listing, Then show the bidding
+    
     if request.method == "GET":
         listings = database.get("SELECT * FROM listings WHERE listing_id = %s", (listing_id, ))
         
         if len(listings) == 0:
             return redirect(url_for("apology", em="Listing dose not exist"))
-        
+
         return render_template("/view_listing.html", listing=listings[0])
         
     # Bidding System # Comments
@@ -213,6 +216,9 @@ def bid(listing_id):
 
     database.save("INSERT INTO bids (user_id, listing_id, ammount) VALUES (%s, %s, %s)", 
                   (session.get("user_id"), listing_id, bid_ammout))
+    
+    database.save("UPDATE listings SET price = %s WHERE listing_id = %s", 
+                  (bid_ammout, listing_id))
 
     return redirect(url_for("view_listing", listing_id=listing_id))
 
