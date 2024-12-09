@@ -38,7 +38,8 @@ def index():
         if len(query) < 3:
             return redirect(url_for("apology", em="Search query must have at leat 3 chracters"))
 
-        listings = database.get("SELECT * FROM listings WHERE title LIKE %s AND user_id != %s", ("%" + str(query) +"%", session.get("user_id")))
+        listings = database.get("SELECT * FROM listings WHERE title LIKE %s AND user_id != %s", 
+                                ("%" + str(query) +"%", session.get("user_id")))
 
         if len(listings) == 0:
             listings = None
@@ -64,12 +65,15 @@ def register():
             return redirect(url_for("apology", em="Confermation password dose not match."))
 
         # Check Username or email is already exist
-        user_list = database.get("SELECT * FROM users WHERE user_name = %s or email = %s", (user_name, email))
+        user_list = database.get("SELECT * FROM users WHERE user_name = %s or email = %s", 
+                                 (user_name, email))
+        
         if len(user_list) >= 1:
             return redirect(url_for("apology", em="Username allready taken or email allready in use."))
 
         # Hasing the passowrd and saving the user to the database
-        database.save("INSERT INTO users (user_name, email, password_hash) VALUES (%s, %s, %s)", (user_name, email, str(generate_password_hash(password))))
+        database.save("INSERT INTO users (user_name, email, password_hash) VALUES (%s, %s, %s)", 
+                      (user_name, email, str(generate_password_hash(password))))
 
         return redirect("login")
         
@@ -167,7 +171,7 @@ def new_listing():
         return redirect(url_for("view_listing", listing_id=listing_id))
 
 
-@app.route("/view_listing/<int:listing_id>", methods=["GET", "POST"])
+@app.route("/view_listing/<int:listing_id>", methods=["GET"])
 def view_listing(listing_id):
     if not listing_id:
         return redirect(url_for("apology", em="Missing URL paramiters"))
@@ -182,10 +186,6 @@ def view_listing(listing_id):
             return redirect(url_for("apology", em="Listing dose not exist"))
 
         return render_template("/view_listing.html", listing=listings[0])
-        
-    # Bidding System # Comments
-    if request.method == "POST":
-        return f"TOOD : Bidding System POST : You are trying to bid on {listing_id}" 
 
 
 @app.route("/bid/<int:listing_id>", methods=["POST"])
@@ -220,6 +220,37 @@ def bid(listing_id):
     database.save("UPDATE listings SET price = %s WHERE listing_id = %s", 
                   (bid_ammout, listing_id))
 
+    return redirect(url_for("view_listing", listing_id=listing_id))
+
+
+@app.route("/end_listing/<int:listing_id>", methods=["POST"])
+def end_listing(listing_id):
+    if not listing_id:
+        return redirect(url_for("apology", em="Missing URL paramieters"))
+    
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    listings = database.get("SELECT user_id FROM listings WHERE listing_id = %s", (listing_id, ))
+
+    if len(listings) == 0:
+        return redirect(url_for("apology", em="Listing dose not exist"))
+    
+    if listings[0].get("user_id") != session.get("user_id"):
+        return redirect(url_for("apology", em="Only owners can end a listing"))
+    
+    # Getting user_id of the hiest bidder
+    bids = database.get("SELECT user_id FROM bids WHERE listing_id = %s ORDER BY ammount ASC", 
+                (listing_id, ))
+
+    if len(bids) == 0:
+        sold_to = session.get("user_id")
+    else:
+        sold_to = bids[0].get("user_id")
+
+    database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
+                (sold_to, True, listing_id))
+    
     return redirect(url_for("view_listing", listing_id=listing_id))
 
 

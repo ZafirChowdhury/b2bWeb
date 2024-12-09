@@ -10,7 +10,7 @@
             <div class="col-md-6">
                 <h1 class="fw-bold">{{ listing.title }}</h1>
                 <p class="text-muted">{{ listing.description }}</p>
-                <h3 class="text-primary fw-bold">{{ listing.price }}Tk</h3>
+                <h3 class="text-primary fw-bold">{{ listing.price }} Tk</h3>
                 <p><strong>Tag:</strong><a href="/tag/{{ listing.tag }}"> {{ listing.tag }} </a></p>
 
                 <!--Time-->
@@ -19,13 +19,22 @@
 
                 <!--Buttons TODO-->
                 <!-- Bid Form -->
-                 {% if session['user_id'] != listing.user_id %}
+                {% if session['user_id'] != listing.user_id %}
                     <form id="bid-form" action="/bid/{{ listing.listing_id }}" method="post" class="mt-3">
                         <div class="form-group">
                             <label for="bid-amount">Bid Amount</label>
                             <input type="number" name="bid_amount" class="form-control" id="bid-amount" step="0.01" min="0" placeholder="Enter your bid" required>
                         </div>
                         <button type="submit" class="btn btn-success mt-2">Bid on Listing</button>
+                    </form>
+                {% endif %}
+
+                <!--End listing button-->
+                {% if session['user_id'] == listing.listing_id %}
+                    <form action="/end_listing/{{ listing.listing_id }}" method="post" class="mt-3">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-danger mt-2">End listing</button>
+                        </div>
                     </form>
                 {% endif %}
 
