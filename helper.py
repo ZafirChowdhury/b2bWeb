@@ -3,6 +3,7 @@ from datetime import datetime
 import requests
 
 import key
+import database
 
 def convert_html_date_time_to_python_datetime(date_time_str):
     return datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M') #'2015-01-02T00:00'
@@ -38,3 +39,15 @@ def upload_image_to_imgbb(image_base64):
 
 def get_current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# TODO
+def update_sold_status(listing_id):
+    # Get user_id of highest bidder of the listing
+    highest_bidder_user_id = database.get("SELECT user_id FROM bids WHERE listing_id = %s ORDER BY ammout ASC", (listing_id, ))
+
+    # If bid dose not exist show error
+
+    # Set sold to the hiest bidder user_id
+
+    # Update sold status
+    return True

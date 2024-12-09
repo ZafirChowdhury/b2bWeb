@@ -139,6 +139,7 @@ def new_listing():
         if not price:
             return redirect(url_for("apology", em="Wrong Price Format"))
 
+        # TODO : Move to a helper fuction
         if image:
             if image.mimetype not in ["image/jpeg", "image/png"]:
                 return redirect(url_for("apology", em="Invalid image format, only png and jpeg are allowed"))
@@ -170,7 +171,7 @@ def new_listing():
 def view_listing(listing_id):
     if not session.get("user_id", None):
             return redirect(url_for("login"))
-    
+    # TODO : Check if a bidding exists for the listing, Then show the bidding
     if request.method == "GET":
         listings = database.get("SELECT * FROM listings WHERE listing_id = %s", (listing_id, ))
         
@@ -179,9 +180,16 @@ def view_listing(listing_id):
         
         return render_template("/view_listing.html", listing=listings[0])
         
-    # Bidding System
+    # Bidding System # Comments
     if request.method == "POST":
         return f"TOOD : Bidding System POST : You are trying to bid on {listing_id}" 
+
+
+@app.route("/bid/<int:listing_id>", methods=["POST"])
+def bid(listing_id):
+    bid_ammout = request.form.get("bid_amount")
+
+    return f"You Bidded {bid_ammout} for the listing {listing_id}"
 
 
 @app.route("/profile", methods=["GET", "POST"])
