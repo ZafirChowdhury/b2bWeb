@@ -39,7 +39,8 @@
         </div>
     </div>
 
-<script>
+    <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             const auctionEndTime = new Date(document.getElementById('auction-end-time').textContent);
             const remainingTimeElement = document.getElementById('remaining-time');
@@ -62,19 +63,23 @@
                 const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
                 remainingTimeElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        }
-
-        bidForm.addEventListener('submit', function(event) {
-            const bidAmount = parseFloat(bidAmountInput.value);
-            if (bidAmount <= currentPrice) {
-                event.preventDefault();
-                alert('Your bid must be higher than the current price.');
             }
+    
+            // Check if bidForm and bidAmountInput exist before adding event listener
+            if (bidForm && bidAmountInput) {
+                bidForm.addEventListener('submit', function(event) {
+                    const bidAmount = parseFloat(bidAmountInput.value);
+                    if (bidAmount <= currentPrice) {
+                        event.preventDefault();
+                        alert('Your bid must be higher than the current price.');
+                    }
+                });
+            }
+    
+            const timerInterval = setInterval(updateRemainingTime, 1000);
+            updateRemainingTime();
         });
 
-        const timerInterval = setInterval(updateRemainingTime, 1000);
-        updateRemainingTime();
-    });
-</script>
+    </script>
 
 {% endblock %}
