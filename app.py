@@ -337,3 +337,26 @@ def tag(tag):
 
     listings = database.get("SELECT * FROM listings WHERE tag = %s ORDER BY listing_id DESC", (tag , ))
     return render_template("/listings.html", listings=listings, page_title="My Listings")
+
+
+@app.route("/delete_listing/<int:listing_id>", methods=["POST"])
+def delete_listing(listing_id):
+    if not session.get("user_id", None):
+            return redirect(url_for("login"))
+    
+    if not listing_id:
+        return redirect(url_for("apology", em="Missing URL paramiters"))
+    
+    listings = database.get("SELECT user_id FROM listings WHERE listing_id = %s",
+                            (listing_id, ))
+    
+    if len(listings) == 0:
+        return redirect(url_for("apology", em="Listing dose not exist"))
+    
+    if not (listings[0].get("user_id") == session.get("user_id") or session.get("is_admin")):
+        return redirect(url_for("apology", em="Only listing owener or a admin can delete a listing"))
+    
+    database.save("DELETE FROM listings WHERE listing_id = %s",
+                  (listing_id, ))
+    
+    return redirect(url_for("index"))

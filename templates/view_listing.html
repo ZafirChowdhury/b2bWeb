@@ -21,7 +21,7 @@
                     {% elif listing.sold_to == session['user_id'] %}
                         <p><strong>You won the biding!</strong></p>
                     {% elif listing.user_id == session['user_id'] %}
-                        <p><strong>You sold the item to!</strong></p>
+                        <p><strong>You sold the item!</strong></p>
                     {% else %}
                         <p><strong>The item is sold!</strong></p>
                     {% endif %}
@@ -53,6 +53,15 @@
                         </form>
                     {% endif %}
 
+                {% endif %}
+
+                <!--Delete listing, for admins and oweners-->
+                {% if (listing.user_id == session['user_id'] or session['is_admin']) %}
+                <form action="/delete_listing/{{ listing.listing_id }}" method="post" class="mt-3">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger mt-2">Delete Listing</button>
+                    </div>
+                </form>
                 {% endif %}
 
             </div>
