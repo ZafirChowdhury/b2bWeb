@@ -38,30 +38,34 @@
                         {% endif %}
 
                     <!-- Reviews Section -->
-                    <div class="mt-5">
-                        <h4>Reviews</h4>
-                        <div id="reviews">
-                            {% for review in reviews %}
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <p>{{ review.review }}</p>
-                                        <small class="text-muted">Reviewed by: {{ review.reviewer_name }} on {{ review.date_posted }}</small>
+                     {% if reviews %}
+                        <div class="mt-5">
+                            <h4>Reviews</h4>
+                            <div id="reviews">
+                                {% for review in reviews %}
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <p>{{ review.review }}</p>
+                                            <small class="text-muted">Reviewed by: {{ review.reviewer_name }} on {{ review.date_posted }}</small>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
 
                     <!-- Submit Review Form -->
-                    <div class="mt-5">
-                        <h4>Submit a Review</h4>
-                        <form action="/submit_review/{{ user.user_id }}" method="post">
-                            <div class="form-group">
-                                <textarea name="review" rows="4" class="form-control" placeholder="Write your review here..." required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-success mt-2">Submit Review</button>
-                        </form>
-                    </div>
+                     {% if session['user_id'] != user.user_id %}
+                        <div class="mt-5">
+                            <h4>Submit a Review</h4>
+                            <form action="/submit_review/{{ user.user_id }}" method="post">
+                                <div class="form-group">
+                                    <textarea name="review" rows="4" class="form-control" placeholder="Write your review here..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success mt-2">Submit Review</button>
+                            </form>
+                        </div>
+                    {% endif %}
 
                     </div>
                 </div>

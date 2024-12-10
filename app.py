@@ -278,13 +278,19 @@ def end_listing(listing_id):
     return redirect(url_for("view_listing", listing_id=listing_id))
 
 
-@app.route("/profile", methods=["GET", "POST"])
-def profile():
+@app.route("/profile/<int:user_id>", methods=["GET", "POST"])
+def profile(user_id):
     if not session.get("user_id", None):
             return redirect(url_for("login"))
     
+    if not user_id:
+        return redirect(url_for("apology", rm="Missing URL paramiters"))
+    
     if request.method == "GET":
-        user = database.get("SELECT * FROM users WHERE user_id = %s", (session.get("user_id"), ))[0]
+        user = database.get("SELECT * FROM users WHERE user_id = %s", (user_id, ))[0]
+
+        # TODO Profile reiews
+
         return render_template("/profile.html", user=user)
 
     if request.method == "FPOST":
@@ -363,3 +369,25 @@ def delete_listing(listing_id):
                   (listing_id, ))
     
     return redirect(url_for("index"))
+
+
+@app.route("/submit_review/<int:user_id>", methods=["POST"])
+def submit_reviews(user_id):
+    if not user_id:
+        return redirect(url_for("apology", em="Missing URL paramiters"))
+    
+    if not session.get("user_id", None):
+        return redirect(url_for("login"))
+    
+    if session.get("user_id") == user_id:
+        return redirect(url_for("apology", em="You cannot review your own profile"))
+    
+    review = request.form.get("review")
+
+    if not review:
+        return redirect(url_for("apology", em="Review content missing"))
+    
+    database.save("INSERT INTO profile_reviews (profile_id, reviewer_id, review) VALUES (%s, %s, %s)",
+                  (user_id, session.get("user_id"), review))
+    
+    return redirect("pofiles", user_id=user_id)
