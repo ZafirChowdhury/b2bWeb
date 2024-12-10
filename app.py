@@ -290,8 +290,10 @@ def profile(user_id):
         user = database.get("SELECT * FROM users WHERE user_id = %s", (user_id, ))[0]
 
         # TODO Profile reiews
+        reviews = database.get("SELECT * FROM profile_reviews WHERE profile_id = %s ORDER BY date_posted DESC",
+                               (user_id, ))
 
-        return render_template("/profile.html", user=user)
+        return render_template("/profile.html", user=user, reviews=reviews)
 
     if request.method == "FPOST":
         return "TODO : Profile POST"
@@ -344,7 +346,7 @@ def tag(tag):
     if not tag:
         return redirect(url_for("apology", em="Tag dose not exist"))
 
-    listings = database.get("SELECT * FROM listings WHERE tag = %s ORDER BY listing_id DESC", (tag , ))
+    listings = database.get("SELECT * FROM listings WHERE tag = %s ORDER BY listing_id DESC", (tag, ))
     return render_template("/listings.html", listings=listings, page_title="My Listings")
 
 
@@ -390,4 +392,4 @@ def submit_reviews(user_id):
     database.save("INSERT INTO profile_reviews (profile_id, reviewer_id, review) VALUES (%s, %s, %s)",
                   (user_id, session.get("user_id"), review))
     
-    return redirect("pofiles", user_id=user_id)
+    return redirect(url_for("profile", user_id=user_id))

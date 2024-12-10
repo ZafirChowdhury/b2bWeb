@@ -23,7 +23,7 @@ CREATE TABLE profile_reviews (
 
     PRIMARY KEY (review_id),
     FOREIGN KEY (profile_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (review_id) REFERENCES users(user_id) ON DELETE SET NULL
+    FOREIGN KEY (reviewer_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE listings (
