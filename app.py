@@ -314,9 +314,12 @@ def admin():
     if request.method == "POST":
         return "TODO : Admin POST"
     
+# TODO
+@app.route("/edit_profile/<int:user_id>", methods=["GET", "POST"])
+def edit_profile(user_id):
+    if not user_id:
+        return redirect(url_for("apology", em="Missing URL paramiters"))
 
-@app.route("/edit_profile", methods=["GET", "POST"])
-def edit_profile():
     if not session.get("user_id", None):
         return redirect("login")
 

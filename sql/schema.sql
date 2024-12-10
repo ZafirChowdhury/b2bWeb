@@ -8,8 +8,22 @@ CREATE TABLE users (
     location VARCHAR(255),
     phone_number VARCHAR(13),
     user_image_link VARCHAR(512),
+    report INT NOT NULL DEFAULT 0,
 
     PRIMARY KEY (user_id)
+);
+
+CREATE TABLE profile_reviews (
+    review_id INT NOT NULL AUTO_INCREMENT,
+    profile_id INT,
+    reviewer_id INT,
+
+    review VARCHAR(2048),
+    date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (review_id),
+    FOREIGN KEY (profile_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (review_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE listings (
