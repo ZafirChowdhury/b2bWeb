@@ -201,10 +201,11 @@ def view_listing(listing_id):
 
                 if len(bids) == 0:
                     sold_to = session.get("user_id")
+                    database.save("UPDATE listings SET sold_to = %s, sold = %s, ended_before_any_bids = %s WHERE listing_id = %s",
+                            (sold_to, True, True,listing_id))
                 else:
                     sold_to = bids[0].get("user_id")
-
-                database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
+                    database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
                             (sold_to, True, listing_id))
 
         return render_template("/view_listing.html", listing=listing)
@@ -267,10 +268,11 @@ def end_listing(listing_id):
 
     if len(bids) == 0:
         sold_to = session.get("user_id")
+        database.save("UPDATE listings SET sold_to = %s, sold = %s, ended_before_any_bids = %s WHERE listing_id = %s",
+                (sold_to, True, True,listing_id))
     else:
         sold_to = bids[0].get("user_id")
-
-    database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
+        database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
                 (sold_to, True, listing_id))
     
     return redirect(url_for("view_listing", listing_id=listing_id))
