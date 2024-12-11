@@ -112,10 +112,11 @@ def logout():
     session.clear()
     return redirect("login")
     
+    
 # em = Error Massage
 @app.route("/apology")
 def apology():
-    return f"<h1>{request.args.get("em", "No Error")}</h1>"
+    return render_template("apology.html", em=request.args.get("em", "No Error"))
 
 
 @app.route("/new_listing", methods=["GET", "POST"])
