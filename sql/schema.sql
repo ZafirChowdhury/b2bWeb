@@ -8,7 +8,7 @@ CREATE TABLE users (
     location VARCHAR(255),
     phone_number VARCHAR(13),
     user_image_link VARCHAR(512),
-    report INT NOT NULL DEFAULT 0,
+    reports INT NOT NULL DEFAULT 0,
 
     PRIMARY KEY (user_id)
 );

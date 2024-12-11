@@ -289,8 +289,8 @@ def profile(user_id):
     if request.method == "GET":
         user = database.get("SELECT * FROM users WHERE user_id = %s", (user_id, ))[0]
 
-        # TODO Profile reiews
-        reviews = database.get("SELECT * FROM profile_reviews WHERE profile_id = %s ORDER BY date_posted DESC",
+        # Profile Reviews
+        reviews = database.get("SELECT user_name, review, date_posted, reviewer_id FROM profile_reviews INNER JOIN users ON profile_reviews.reviewer_id = users.user_id WHERE profile_id = %s ORDER BY date_posted DESC",
                                (user_id, ))
 
         return render_template("/profile.html", user=user, reviews=reviews)
@@ -392,4 +392,23 @@ def submit_reviews(user_id):
     database.save("INSERT INTO profile_reviews (profile_id, reviewer_id, review) VALUES (%s, %s, %s)",
                   (user_id, session.get("user_id"), review))
     
+    return redirect(url_for("profile", user_id=user_id))
+
+
+@app.route("/report_user/<int:user_id>", methods=["POST"])
+def report_user(user_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    if session.get("user_id") == user_id:
+        return redirect(url_for("apology", em="You cannot report yourself"))
+    
+    number_of_repoerts = database.get("SELECT reports FROM users WHERE user_id = %s",
+                           (user_id, ))[0].get("reports")
+    
+    number_of_repoerts = number_of_repoerts + 1
+
+    database.save("UPDATE users SET reports = %s WHERE user_id = %s",
+                  (number_of_repoerts, user_id))
+
     return redirect(url_for("profile", user_id=user_id))
