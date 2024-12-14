@@ -74,6 +74,43 @@
         </div>
     </div>
 
+    <!-- Bids Table -->
+
+    {% if session['user_id'] == listing.user_id %}
+    {% if bids %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center">Bids</h3>
+                <div class="table-responsive mx-3">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Buyer Name</th>
+                            <th>Bid Ammout</th>
+                            <th>Date</th>
+                            <th>Chat</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for bid in bids %}
+                            <tr>
+                                <td><a href="/profile/{{ bid.user_id }}">{{ bid.user_name }}</a></td>
+                                <td>{{ bid.ammount }}Tk</td>
+                                <td>{{ bid.date }}</td>
+                                <td><a href="#" class="btn btn-primary">Chat</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
+    {% endif %}
+
     <script>
         
         document.addEventListener('DOMContentLoaded', function() {

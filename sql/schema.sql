@@ -75,7 +75,7 @@ CREATE TABLE chat (
     PRIMARY KEY (chat_id),
     FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (buyer_id) REFERENCES user_id(user_id) ON DELETE SET NULL
+    FOREIGN KEY (buyer_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE chat_massage (

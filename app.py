@@ -208,8 +208,18 @@ def view_listing(listing_id):
                     sold_to = bids[0].get("user_id")
                     database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
                             (sold_to, True, listing_id))
+                    
+        # Bids
+        query = '''
+            SELECT bids.user_id, users.user_name, bids.date, bids.ammount 
+            FROM bids
+            INNER JOIN users
+            ON  bids.user_id = users.user_id
+            WHERE listing_id = %s
+        '''
+        bids = database.get(query, (listing_id, ))
 
-        return render_template("/view_listing.html", listing=listing)
+        return render_template("/view_listing.html", listing=listing, bids=bids)
 
 
 @app.route("/bid/<int:listing_id>", methods=["POST"])
