@@ -196,18 +196,12 @@ def view_listing(listing_id):
         # Update to sold, if time has ended
         if not auction_end_time == defult_no_end_time: # There is a user given time
             if auction_end_time < current_time: # Auction has ended
-                # Getting user_id of the hiest bidder
-                bids = database.get("SELECT user_id FROM bids WHERE listing_id = %s ORDER BY ammount ASC", 
-                            (listing_id, ))
-
-                if len(bids) == 0:
-                    sold_to = session.get("user_id")
-                    database.save("UPDATE listings SET sold_to = %s, sold = %s, ended_before_any_bids = %s WHERE listing_id = %s",
-                            (sold_to, True, True,listing_id))
-                else:
-                    sold_to = bids[0].get("user_id")
-                    database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
-                            (sold_to, True, listing_id))
+                query = '''
+                    UPDATE listings
+                    SET ended = %s
+                    WHERE listing_id = %s
+                '''
+                database.save(query, (listing_id, True))
                     
         # Bids
         query = '''
@@ -273,18 +267,13 @@ def end_listing(listing_id):
     if listings[0].get("user_id") != session.get("user_id"):
         return redirect(url_for("apology", em="Only owners can end a listing"))
     
-    # Getting user_id of the hiest bidder
-    bids = database.get("SELECT user_id FROM bids WHERE listing_id = %s ORDER BY ammount ASC", 
-                (listing_id, ))
-
-    if len(bids) == 0:
-        sold_to = session.get("user_id")
-        database.save("UPDATE listings SET sold_to = %s, sold = %s, ended_before_any_bids = %s WHERE listing_id = %s",
-                (sold_to, True, True,listing_id))
-    else:
-        sold_to = bids[0].get("user_id")
-        database.save("UPDATE listings SET sold_to = %s, sold = %s WHERE listing_id = %s",
-                (sold_to, True, listing_id))
+    # Chnage the ended flag in listings
+    query = '''
+            UPDATE listings
+            SET ended = %s
+            WHERE listing_id = %s
+            '''
+    database.save(query, (listing_id, True))
     
     return redirect(url_for("view_listing", listing_id=listing_id))
 
@@ -306,7 +295,7 @@ def profile(user_id):
 
         return render_template("/profile.html", user=user, reviews=reviews)
 
-    if request.method == "FPOST":
+    if request.method == "POST":
         return "TODO : Profile POST"
 
 

@@ -34,6 +34,7 @@ CREATE TABLE listings (
     title VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     sold BOOLEAN NOT NULL DEFAULT FALSE,
+    ended BOOLEAN NOT NULL DEFAULT FALSE,
     ended_before_any_bids BOOLEAN NOT NULL DEFAULT FALSE,
     description VARCHAR(6000) NOT NULL,
     tag VARCHAR(255) NOT NULL,
