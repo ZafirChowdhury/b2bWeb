@@ -83,10 +83,12 @@ CREATE TABLE chats (
 CREATE TABLE chat_message (
     massage_id INT NOT NULL AUTO_INCREMENT,
     chat_id INT,
+    sender_id INT,
 
     message_text VARCHAR(2048) NOT NULL,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (massage_id),
-    FOREIGN KEY (chat_id) REFERENCES chat(chat_id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id) REFERENCES chats(chat_id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id) ON DELETE SET NULL
 );

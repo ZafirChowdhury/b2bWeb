@@ -414,36 +414,46 @@ def report_user(user_id):
     return redirect(url_for("profile", user_id=user_id))
 
 
-@app.route("/chat/<int:listing_id/<int:buyer_id>", methods=["POST"])
+@app.route("/chat/<int:listing_id>/<int:buyer_id>", methods=["POST", "GET"])
 def chat(listing_id, buyer_id):
     if not session.get("user_id"):
         return redirect(url_for("login"))
-    
-    query = '''
-        SELECT * 
-        FROM listings
-        WHERE listing_id = %s
-    '''
-    listings = database.get(query, (listing_id, ))
+
+    listings = database.get("SELECT * FROM listings WHERE listing_id = %s", (listing_id, ))
     if len(listings) == 0:
         return redirect(url_for("apology", em="Listing dose not exist"))
     
     listing = listings[0]
 
+    # Checking user acess
     if not (listing.get("user_id") == session.get("user_id") or buyer_id == session.get("user_id")):
         return redirect(url_for("apology", em="Invalid acess"))
-    
-    query = '''
-        SELECT *
-        FROM chats
-        WHERE listing_id = %s AND buyer_id = %s
-    '''
-    chats = database.get(query, (listing_id, buyer_id))
 
+    # If chat dose not exist create chat and then show
+    chats = database.get("SELECT * FROM chats WHERE listing_id = %s AND buyer_id = %s", (listing_id, buyer_id))
     if len(chats) == 0: 
-        query = '''
-            INSERT INTO 
-        '''
+        database.save("INSERT INTO chats (listing_id, buyer_id, seller_id) VALUES (%s, %s, %s)", (listing_id, buyer_id, listing.get("user_id")))
 
-    # Show existing chat
-    return ""
+    # Getting chat data and messages
+    chat = database.get("SELECT * FROM chats WHERE listing_id = %s AND buyer_id = %s", (listing_id, buyer_id))[0]
+    messages = database.get("SELECT * FROM chat_message WHERE chat_id = %s", (chat.get("chat_id"), ))
+
+    return render_template("chat.html", chat=chat, messages=messages)
+
+
+@app.route("/message/<int:sender_id>/<int:chat_id>/<int:buyer_id>/<int:listing_id>", methods=["POST"])
+def message(sender_id, chat_id, buyer_id, listing_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    if sender_id != session.get("user_id"):
+        return redirect(url_for("apology", em="Invalid acess"))
+    
+    text = request.form.get("message_text")
+
+    if not text:
+        return redirect(url_for("apology", em="Message content missings"))
+    
+    database.save("INSERT INTO chat_message (chat_id, sender_id, message_text) VALUES (%s, %s, %s)", (chat_id, sender_id, text))
+
+    return redirect(url_for("chat", listing_id=listing_id, buyer_id=buyer_id))
