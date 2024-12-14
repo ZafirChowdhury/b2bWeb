@@ -65,13 +65,14 @@ CREATE TABLE bids (
     FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE
 );
 
-CREATE TABLE chat (
+CREATE TABLE chats (
     chat_id INT NOT NULL AUTO_INCREMENT,
     listing_id INT,
     seller_id INT,
     buyer_id INT,
 
     bid_accepted BOOLEAN DEFAULT FALSE,
+    payment_made BOOLEAN DEFAULT FALSE,
 
     PRIMARY KEY (chat_id),
     FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE,
@@ -79,11 +80,11 @@ CREATE TABLE chat (
     FOREIGN KEY (buyer_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
-CREATE TABLE chat_massage (
+CREATE TABLE chat_message (
     massage_id INT NOT NULL AUTO_INCREMENT,
     chat_id INT,
 
-    massage VARCHAR(2048) NOT NULL,
+    message_text VARCHAR(2048) NOT NULL,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (massage_id),

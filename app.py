@@ -412,3 +412,38 @@ def report_user(user_id):
                   (number_of_repoerts, user_id))
 
     return redirect(url_for("profile", user_id=user_id))
+
+
+@app.route("/chat/<int:listing_id/<int:buyer_id>", methods=["POST"])
+def chat(listing_id, buyer_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    query = '''
+        SELECT * 
+        FROM listings
+        WHERE listing_id = %s
+    '''
+    listings = database.get(query, (listing_id, ))
+    if len(listings) == 0:
+        return redirect(url_for("apology", em="Listing dose not exist"))
+    
+    listing = listings[0]
+
+    if not (listing.get("user_id") == session.get("user_id") or buyer_id == session.get("user_id")):
+        return redirect(url_for("apology", em="Invalid acess"))
+    
+    query = '''
+        SELECT *
+        FROM chats
+        WHERE listing_id = %s AND buyer_id = %s
+    '''
+    chats = database.get(query, (listing_id, buyer_id))
+
+    if len(chats) == 0: 
+        query = '''
+            INSERT INTO 
+        '''
+
+    # Show existing chat
+    return ""
