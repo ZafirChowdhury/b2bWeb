@@ -213,7 +213,8 @@ def view_listing(listing_id):
         '''
         bids = database.get(query, (listing_id, ))
 
-        return render_template("/view_listing.html", listing=listing, bids=bids)
+        user_bids = database.get("SELECT * FROM bids WHERE listing_id = %s AND user_id = %s", (listing_id, session.get("user_id")))
+        return render_template("/view_listing.html", listing=listing, bids=bids, user_bids=user_bids)
 
 
 @app.route("/bid/<int:listing_id>", methods=["POST"])
@@ -437,7 +438,7 @@ def chat(listing_id, buyer_id):
     # Getting chat data and messages
     chat = database.get("SELECT * FROM chats WHERE listing_id = %s AND buyer_id = %s", (listing_id, buyer_id))[0]
     messages = database.get("SELECT * FROM chat_message WHERE chat_id = %s", (chat.get("chat_id"), ))
-    bid = database.get("SELECT * FROM bids WHERE listing_id = %s AND user_id = %s", (listing_id, buyer_id))[0]
+    bid = database.get("SELECT * FROM bids WHERE listing_id = %s AND user_id = %s ORDER BY ammount DESC LIMIT 1", (listing_id, buyer_id))[0] # highest bid of the bidder for this listing
     buyer = database.get("SELECT * FROM users WHERE user_id = %s", (buyer_id, ))[0]
 
     return render_template("chat.html", chat=chat, messages=messages, bid=bid, buyer=buyer)
