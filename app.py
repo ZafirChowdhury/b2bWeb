@@ -312,7 +312,7 @@ def my_listings():
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     if not session.get("user_id", None):
-            return redirect(url_for("login"))
+        return redirect(url_for("login"))
     
     if not session.get("is_admin"):
         return redirect(url_for("apology"), em="Acess denied")
@@ -337,6 +337,19 @@ def edit_profile(user_id):
 
     if request.method == "POST":
         return "TODO : EDIT PROFILE POST"
+
+
+@app.route("/delete_profile/<int:user_id>")
+def delete_profile(user_id):
+    if not session.get("user_id", None):
+        return redirect(url_for("login"))
+    
+    if not (session.get("user_id") == user_id or session.get("is_admin")):
+        return redirect(url_for("apology", em="Only user if self or a admin can delete a user"))
+    
+    database.save("DELETE FROM users WHERE user_id = %s", (user_id, ))
+
+    return redirect(url_for("/"))
 
 
 @app.route("/tag/<tag>", methods=["GET"])
