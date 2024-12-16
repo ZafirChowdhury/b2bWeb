@@ -3,6 +3,40 @@
 {% block title %}Chat{% endblock %}
 
 {% block main %}
+
+    {% if session['user_id'] == buyer.user_id %}
+
+        <!-- Buyer Window -->
+
+    {% else %}
+
+        <!-- Seller Window -->
+        <div class="row mt-4">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Bidding Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Bidder:</strong> {{ buyer.user_name }}<br>
+                                        <strong>Amount:</strong> {{ bid.ammount }} Tk<br>
+                                        <strong>Time:</strong> {{ bid.date }}
+                                    </div>
+                                    <form action="/#" method="post">
+                                        <button class="btn btn-success" type="submit">Accept Bid</button>
+                                    </form>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    {% endif %}
+
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-8 offset-md-2">
@@ -12,7 +46,9 @@
                     </div>
                     <div class="card-body chat-body">
                         <ul class="list-group" id="messages">
+
                             {% for message in messages %}
+
                                 {% if message.sender_id == session['user_id'] %}
                                     <li class="list-group-item bg-primary text-white mb-2 message-item">
                                         <div class="d-flex justify-content-between">
@@ -20,6 +56,7 @@
                                             <small>{{ message.date_posted }}</small>
                                         </div>
                                     </li>
+
                                 {% else %}
                                     <li class="list-group-item bg-light mb-2 message-item">
                                         <div class="d-flex justify-content-between">
@@ -28,7 +65,9 @@
                                         </div>
                                     </li>
                                 {% endif %}
+                                
                             {% endfor %}
+
                         </ul>
                     </div>
                     
