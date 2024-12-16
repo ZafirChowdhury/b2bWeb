@@ -193,7 +193,7 @@ def view_listing(listing_id):
         defult_no_end_time = datetime(2000, 1, 1, 0, 0, 0)
         current_time = datetime.now()
 
-        # Update to sold, if time has ended
+        # Update to ended, if time has ended
         if not auction_end_time == defult_no_end_time: # There is a user given time
             if auction_end_time < current_time: # Auction has ended
                 query = '''
@@ -268,7 +268,7 @@ def end_listing(listing_id):
     if listings[0].get("user_id") != session.get("user_id"):
         return redirect(url_for("apology", em="Only owners can end a listing"))
     
-    # Chnage the ended flag in listings
+    # Change the ended flag in listings
     query = '''
             UPDATE listings
             SET ended = %s
@@ -475,3 +475,27 @@ def accept_bid(chat_id):
     database.save("UPDATE chats SET bid_accepted = %s WHERE chat_id = %s", (True, chat_id))
 
     return redirect(url_for("chat", listing_id=chat.get("listing_id"), buyer_id=chat.get("buyer_id")))
+
+
+@app.route("/pay/<int:flag>/<int:chat_id>", methods=["POST"])
+def pay(flag, chat_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    if flag not in [1, 2]:
+        return redirect(url_for("apology", em="Invalid Request"))
+    
+    chat = database.get("SELECT * FROM chats WHERE chat_id = %s", (chat_id, ))[0]
+    
+    if not (session.get("user_id") == chat.get("buyer_id")):
+        return redirect(url_for("apology", em="Access Denied"))
+    
+    # 1 -> Payment made
+    # Update sold status
+    if flag == 1:
+        # Change sold status, sold_to
+        database.save("UPDATE listings SET sold = %s, sold_to = %s", (True, chat.get("buyer_id")))
+
+    database.save("UPDATE chats SET payment_made = %s WHERE chat_id = %s", (flag, chat.get("chat_id")))
+
+    return redirect(url_for("view_listing", listing_id=chat.get("listing_id")))

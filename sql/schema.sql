@@ -72,12 +72,14 @@ CREATE TABLE chats (
     buyer_id INT,
 
     bid_accepted BOOLEAN DEFAULT FALSE,
-    payment_made BOOLEAN DEFAULT FALSE,
+    payment_made INT DEFAULT 0, -- 1 -> payment made, 2-> rejected
 
     PRIMARY KEY (chat_id),
     FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (buyer_id) REFERENCES users(user_id) ON DELETE SET NULL
+    FOREIGN KEY (buyer_id) REFERENCES users(user_id) ON DELETE SET NULL,
+
+    CHECK (payment_made IN (0, 1, 2))
 );
 
 CREATE TABLE chat_message (
