@@ -25,9 +25,13 @@
                                         <strong>Amount:</strong> {{ bid.ammount }} Tk<br>
                                         <strong>Time:</strong> {{ bid.date }}
                                     </div>
-                                    <form action="/#" method="post">
-                                        <button class="btn btn-success" type="submit">Accept Bid</button>
-                                    </form>
+                                    {% if not chat['bid_accepted'] %}
+                                        <form action="/accept_bid/{{ chat.chat_id }}" method="post">
+                                            <button class="btn btn-success" type="submit">Accept Bid</button>
+                                        </form>
+                                    {% else %}
+                                        <strong>You accepted the bid!</strong>
+                                    {% endif %}
                                 </li>
                         </ul>
                     </div>
@@ -79,7 +83,7 @@
                             </div>
                         </form>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

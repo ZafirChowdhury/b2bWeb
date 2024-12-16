@@ -460,3 +460,18 @@ def message(sender_id, chat_id, buyer_id, listing_id):
     database.save("INSERT INTO chat_message (chat_id, sender_id, message_text) VALUES (%s, %s, %s)", (chat_id, sender_id, text))
 
     return redirect(url_for("chat", listing_id=listing_id, buyer_id=buyer_id))
+
+
+@app.route("/accept_bid/<int:chat_id>", methods=["POST"])
+def accept_bid(chat_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    # Check if listing owner is accepting the bid
+    chat = database.get("SELECT * FROM chats WHERE chat_id = %s", (chat_id, ))[0]
+    if not (session.get("user_id") == chat.get("seller_id")):
+        return redirect(url_for("apology", em="Only owners can accept bids"))
+    
+    database.save("UPDATE chats SET bid_accepted = %s WHERE chat_id = %s", (True, chat_id))
+
+    return redirect(url_for("chat", listing_id=chat.get("listing_id"), buyer_id=chat.get("buyer_id")))
