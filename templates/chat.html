@@ -5,45 +5,46 @@
 {% block main %}
 
     {% if session['user_id'] == buyer.user_id %}
-
-        <!-- Buyer Window -->
-        <div class="row mt-4">
-            <div class="col-md-8 offset-md-2">
-            <div class="card">
-            <div class="card-header text-center">
-            <h3>Bidding Information</h3>
-            </div>
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>Your bid:</strong> {{ bid.ammount }} Tk<br>
-                            <strong>Time:</strong> {{ bid.date }}<br>
-                            {% if chat.payment_made == 1 %}
-                                <strong>You won the bid!</strong>
-                            {% elif chat.payment_made == 2 %}
-                                <strong>You rejected the bid!</strong>
-                            {% endif %}
-                        </div>
-                    
-                    {% if chat['payment_made'] == 0 %}
-                        {% if chat['bid_accepted'] %}
-                            <div class="btn-group" role="group">
-                                <form action="/pay/1/{{ chat.chat_id }}" method="post" class="d-inline">
-                                    <button class="btn btn-success me-2" type="submit">Confirm Payment</button>
-                                </form>
-                                <form action="/pay/2/{{ chat.chat_id }}" method="post" class="d-inline">
-                                    <button class="btn btn-danger" type="submit">Cancel</button>
-                                </form>
+        {% if bid %}
+            <!-- Buyer Window -->
+            <div class="row mt-4">
+                <div class="col-md-8 offset-md-2">
+                <div class="card">
+                <div class="card-header text-center">
+                <h3>Bidding Information</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Your bid:</strong> {{ bid.ammount }} Tk<br>
+                                <strong>Time:</strong> {{ bid.date }}<br>
+                                {% if chat.payment_made == 1 %}
+                                    <strong>You won the bid!</strong>
+                                {% elif chat.payment_made == 2 %}
+                                    <strong>You rejected the bid!</strong>
+                                {% endif %}
                             </div>
+                        
+                        {% if chat['payment_made'] == 0 %}
+                            {% if chat['bid_accepted'] %}
+                                <div class="btn-group" role="group">
+                                    <form action="/pay/1/{{ chat.chat_id }}" method="post" class="d-inline">
+                                        <button class="btn btn-success me-2" type="submit">Confirm Payment</button>
+                                    </form>
+                                    <form action="/pay/2/{{ chat.chat_id }}" method="post" class="d-inline">
+                                        <button class="btn btn-danger" type="submit">Cancel</button>
+                                    </form>
+                                </div>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+                </div>
             </div>
-            </div>
-            </div>
-        </div>
+        {% endif %}
 
     {% else %}
 

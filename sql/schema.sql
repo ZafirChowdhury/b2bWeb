@@ -41,6 +41,7 @@ CREATE TABLE listings (
 
     image_url VARCHAR(512),
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    auction_end_time_flag BOOLEAN DEFAULT FALSE,
     auction_end_time TIMESTAMP DEFAULT '2000-01-01 00:00:00',
     
     PRIMARY KEY (listing_id),

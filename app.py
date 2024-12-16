@@ -159,8 +159,8 @@ def new_listing():
 
         if auction_end_time:
             auction_end_time = helper.convert_html_date_time_to_python_datetime(auction_end_time)
-            database.save("INSERT INTO listings (user_id, title, description, price, image_url, auction_end_time, tag) VALUES (%s, %s, %s, %s, %s, %s, %s)", 
-                          (session.get("user_id", 0), title, description, price, image_url, auction_end_time, tag))
+            database.save("INSERT INTO listings (user_id, title, description, price, image_url, auction_end_time, tag, auction_end_time_flag) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", 
+                          (session.get("user_id", 0), title, description, price, image_url, auction_end_time, tag, True))
 
         else:
             database.save("INSERT INTO listings (user_id, title, description, price, image_url, tag) VALUES (%s, %s, %s, %s, %s, %s)", 
@@ -438,8 +438,12 @@ def chat(listing_id, buyer_id):
     # Getting chat data and messages
     chat = database.get("SELECT * FROM chats WHERE listing_id = %s AND buyer_id = %s", (listing_id, buyer_id))[0]
     messages = database.get("SELECT * FROM chat_message WHERE chat_id = %s", (chat.get("chat_id"), ))
-    bid = database.get("SELECT * FROM bids WHERE listing_id = %s AND user_id = %s ORDER BY ammount DESC LIMIT 1", (listing_id, buyer_id))[0] # highest bid of the bidder for this listing
     buyer = database.get("SELECT * FROM users WHERE user_id = %s", (buyer_id, ))[0]
+    bid = database.get("SELECT * FROM bids WHERE listing_id = %s AND user_id = %s ORDER BY ammount DESC LIMIT 1", (listing_id, buyer_id)) # highest bid of the bidder for this listing
+    if len(bid) == 0:
+        bid = None
+    else:
+        bid = bid[0]
 
     return render_template("chat.html", chat=chat, messages=messages, bid=bid, buyer=buyer)
 

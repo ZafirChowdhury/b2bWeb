@@ -29,9 +29,11 @@
                 {% else %}
 
                     {% if not listing.ended %} <!-- Ugly Chnage due to degine beting changed multiple times -->
-                        <!--Time-->
-                        <p><strong>Auction End Time:</strong> <span id="auction-end-time">{{ listing.auction_end_time }}</span></p>
-                        <p><strong>Remaining Time:</strong> <span id="remaining-time"></span></p>
+                        {% if listing.auction_end_time_flag %}
+                            <!--Time-->
+                            <p><strong>Auction End Time:</strong> <span id="auction-end-time">{{ listing.auction_end_time }}</span></p>
+                            <p><strong>Remaining Time:</strong> <span id="remaining-time"></span></p>
+                        {% endif %}
 
                         <!--Buttons-->
                         <!-- Bid Form -->
@@ -58,12 +60,14 @@
                 {% endif %}
                 
                 {% if listing.user_id != session['user_id'] %}
-                    <!-- Chat -->
-                    <form action="/chat/{{ listing.listing_id }}/{{ session['user_id'] }}" method="post" class="mt-3">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Chat</button>
-                        </div>
-                    </form>
+                    {% if user_bids %}
+                        <!-- Chat -->
+                        <form action="/chat/{{ listing.listing_id }}/{{ session['user_id'] }}" method="post" class="mt-3">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Chat</button>
+                            </div>
+                        </form>
+                    {% endif %}
                 {% endif %}
 
                 <!--Delete listing, for admins and oweners-->
