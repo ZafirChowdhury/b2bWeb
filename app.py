@@ -516,3 +516,14 @@ def pay(flag, chat_id):
     database.save("UPDATE chats SET payment_made = %s WHERE chat_id = %s", (flag, chat.get("chat_id")))
 
     return redirect(url_for("view_listing", listing_id=chat.get("listing_id")))
+
+
+@app.route("/purchased_products", methods=["GET"])
+def purchased_products():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    listings = database.get("SELECT * FROM listings WHERE sold_to = %s", (session.get("user_id"), ))
+
+    return render_template("listings.html", listings=listings)
+    
