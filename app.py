@@ -583,7 +583,8 @@ def edit_listing(listing_id):
         return redirect(url_for("apology", em="You cannot edit a listing with bids"))
     
     if request.method == "GET":
-        return render_template("edit_listing.html", listing=listing)
+        tags = database.get("SELECT * FROM tags", ())
+        return render_template("edit_listing.html", listing=listing, tags=tags)
     
     if request.method == "POST":
         return "TODO"
