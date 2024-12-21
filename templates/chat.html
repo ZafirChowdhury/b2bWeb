@@ -59,7 +59,7 @@
                         <ul class="list-group">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong>Bidder:</strong> {{ buyer.user_name }}<br>
+                                        <strong>Bidder:</strong><a href="/profile/{{ chat.buyer_id }}">{{ buyer.user_name }}</a><br>
                                         <strong>Amount:</strong> {{ bid.ammount }} Tk<br>
                                         <strong>Time:</strong> {{ bid.date }}
                                     </div>
