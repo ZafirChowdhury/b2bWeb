@@ -144,7 +144,6 @@ def new_listing():
         if not price:
             return redirect(url_for("apology", em="Wrong Price Format"))
 
-        # TODO : Move to a helper fuction
         if image:
             if image.mimetype not in ["image/jpeg", "image/png"]:
                 return redirect(url_for("apology", em="Invalid image format, only png and jpeg are allowed"))
@@ -587,5 +586,41 @@ def edit_listing(listing_id):
         return render_template("edit_listing.html", listing=listing, tags=tags)
     
     if request.method == "POST":
-        return "TODO"
+        title = request.form.get("title")
+        description = request.form.get("description")
+        price = request.form.get("price")
+        auction_end_time = request.form.get("auction_end_time")
+        tag = request.form.get("tag")
+        image = request.files.get("image")
+
+        if title:
+            database.save("UPDATE listings SET title = %s WHERE listing_id = %s", (title, listing_id))
+
+        if description:
+            database.save("UPDATE listings SET description = %s WHERE listing_id = %s", (description, listing_id))
+
+        price = helper.check_is_float_and_convert(price)
+        if price:
+            database.save("UPDATE listings SET price = %s WHERE listing_id = %s", (price, listing_id))
+
+        if auction_end_time:
+            auction_end_time = helper.convert_html_date_time_to_python_datetime(auction_end_time)
+            database.save("UPDATE listings SET auction_end_time = %s WHERE listing_id = %s", (auction_end_time, listing_id))
+
+        if tag:
+            database.save("UPDATE listings SET tag = %s WHERE listing_id = %s", (tag, listing_id))
+
+        if image:
+            if image.mimetype not in ["image/jpeg", "image/png"]:
+                return redirect(url_for("apology", em="Invalid image format, only png and jpeg are allowed"))
+            
+            if len(image.read()) > MAX_IAMGE_SIZE:
+                return redirect(url_for("apology", em="Image size exedes 512KB."))
+            
+            image.seek(0)
+            image_url = helper.upload_image_to_imgbb(b64encode(image.read()))
+
+            database.save("UPDATE listings SET image_url = %s WHERE listing_id = %s", (image_url, listing_id))
+
+        return redirect(url_for("view_listing", listing_id=listing_id))
     
