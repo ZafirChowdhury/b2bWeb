@@ -77,7 +77,7 @@ def register():
 
         return redirect("login")
         
-# Update
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     session.clear()
@@ -323,7 +323,7 @@ def admin():
     if request.method == "POST":
         return "TODO : Admin POST"
     
-# TODO
+
 @app.route("/edit_profile/<int:user_id>", methods=["GET", "POST"])
 def edit_profile(user_id):
     if not user_id:
@@ -331,12 +331,46 @@ def edit_profile(user_id):
 
     if not session.get("user_id", None):
         return redirect("login")
+    
+    if not (session.get("is_admin") or session.get("user_id")) == user_id:
+        return redirect(url_for("apology", em="You dont have acess."))
 
     if request.method == "GET":
-        return render_template("/edit_profile.html")
+        user = database.get("SELECT user_id, email, location, phone_number FROM users WHERE user_id = %s", (session.get("user_id"), ))[0]
+        return render_template("/edit_profile.html", user=user)
 
     if request.method == "POST":
-        return "TODO : EDIT PROFILE POST"
+        email = request.form.get("email")
+        phone = request.form.get("phone_number")
+        location = request.form.get("location")
+        profile_image = request.files.get("image")
+
+        if email:
+            user_list = database.get("SELECT * FROM users WHERE email = %s", (email, ))
+            if len(user_list) > 1:
+                return redirect(url_for("apology", em="Email is allready in use"))
+
+            database.save("UPDATE users SET email = %s WHERE user_id = %s", (email, user_id))
+        
+        if phone:
+            database.save("UPDATE users SET phone_number = %s WHERE user_id = %s", (phone, user_id))
+
+        if location:
+            database.save("UPDATE users SET location = %s WHERE user_id = %s", (location, user_id))
+
+        if profile_image:
+            if profile_image.mimetype not in ["image/jpeg", "image/png"]:
+                return redirect(url_for("apology", em="Invalid image format, only png and jpeg are allowed"))
+            
+            if len(profile_image.read()) > MAX_IAMGE_SIZE:
+                return redirect(url_for("apology", em="Image size exedes 512KB."))
+            
+            profile_image.seek(0)
+            image_url = helper.upload_image_to_imgbb(b64encode(profile_image.read()))
+
+            database.save("UPDATE users SET user_image_link = %s WHERE user_id = %s", (image_url, user_id))
+
+        return redirect(url_for("profile", user_id=user_id))
 
 
 @app.route("/delete_profile/<int:user_id>")
