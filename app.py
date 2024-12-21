@@ -561,3 +561,30 @@ def purchased_products():
 
     return render_template("listings.html", listings=listings)
     
+
+@app.route("/edit_listing/<int:listing_id>", methods=["GET", "POST"])
+def edit_listing(listing_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    # Check if listing exist
+    listings = database.get("SELECT * FROM listings WHERE listing_id = %s LIMIT 1", (listing_id, ))
+    if len(listings) == 0:
+        return redirect(url_for("apology", em="Listing dose not exist"))
+    
+    # Check if owner is trying to edit it
+    listing = listings[0]
+    if not (listing.get("user_id") == session.get("user_id")):
+        return redirect(url_for("apology", em="Only owners can edit a listing"))
+    
+    # Check if any bid is made
+    bids = database.get("SELECT * FROM bids WHERE listing_id = %s", (listing_id, ))
+    if len(bids) > 0:
+        return redirect(url_for("apology", em="You cannot edit a listing with bids"))
+    
+    if request.method == "GET":
+        return render_template("edit_listing.html", listing=listing)
+    
+    if request.method == "POST":
+        return "TODO"
+    
