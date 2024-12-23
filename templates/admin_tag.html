@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}: Admin Tag{% endblock %}
+
+{% block main %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Add New Tag</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin_tag" method="post">
+                            <div class="form-group mb-3">
+                                <label for="tag_name">Tag Name</label>
+                                <input type="text" name="new_tag" class="form-control" id="tag_name" placeholder="Enter new tag" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mt-3">Add Tag</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Current Tags</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Tag Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tag in tags %}
+                                <tr>
+                                    <td>{{ tag.tag }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+{% endblock %}

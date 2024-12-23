@@ -665,3 +665,24 @@ def delete_review(review_id, profile_id):
     database.save("DELETE FROM profile_reviews WHERE review_id = %s", (review_id, ))
 
     return redirect(url_for("profile", user_id=profile_id))
+
+
+@app.route("/admin_tag", methods=["GET", "POST"])
+def admin_tag():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    
+    if not session.get("is_admin"):
+        return redirect(url_for("apology", em="Only can acess this page"))
+
+    if request.method == "GET":
+        tags = database.get("SELECT * FROM tags", ())
+        return render_template("admin_tag.html", tags=tags)
+
+    if request.method == "POST":
+        tag = request.form.get("new_tag")
+
+        database.save("INSERT INTO tags (tag) VALUE (%s)", (tag, ))
+
+        return redirect(url_for("admin_tag"))
+    
