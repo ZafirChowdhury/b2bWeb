@@ -624,3 +624,31 @@ def edit_listing(listing_id):
 
         return redirect(url_for("view_listing", listing_id=listing_id))
     
+
+@app.route("/change_password", methods=["GET", "POST"])
+def change_password():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))   
+    
+    if request.method == "GET":
+        return render_template("change_password.html")
+    
+    if request.method == "POST":
+        current_password = request.form.get("current_password")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+
+        if not current_password or not new_password or not confirm_password:
+            return redirect(url_for("apology", em="Fill all the requred fields"))
+        
+        if new_password != confirm_password:
+            return redirect(url_for("Confermation password dose not match"))
+        
+        password_hash = database.get("SELECT password_hash FROM users WHERE user_id = %s", (session.get("user_id"), ))[0].get("password_hash")
+
+        if not check_password_hash(password_hash, current_password):
+            return redirect(url_for("apology", em="Wrong Password"))
+        
+        database.save("UPDATE users SET password_hash = %s WHERE user_id = %s", (generate_password_hash(new_password), session.get("user_id")))
+
+        return redirect(url_for("profile", user_id=session.get("user_id")))
