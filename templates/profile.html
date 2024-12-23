@@ -78,6 +78,14 @@
                                             <p>{{ review.review }}</p>
                                             <small class="text-muted">Reviewed by: <a href="/profile/{{ review.reviewer_id }}">{{ review.user_name }}</a> on {{ review.date_posted }}</small>
                                         </div>
+                                        <!--Delete Button for admins-->
+                                        {% if session['is_admin'] %}
+                                            <form action="/delete_review/{{ review.review_id }}/{{ session['user_id'] }}" method="post" class="mt-3">
+                                                <div class="form-group text-right">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete Review</button>
+                                                </div>
+                                            </form>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                             </div>

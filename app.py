@@ -290,7 +290,7 @@ def profile(user_id):
         user = database.get("SELECT * FROM users WHERE user_id = %s", (user_id, ))[0]
 
         # Profile Reviews
-        reviews = database.get("SELECT user_name, review, date_posted, reviewer_id FROM profile_reviews INNER JOIN users ON profile_reviews.reviewer_id = users.user_id WHERE profile_id = %s ORDER BY date_posted DESC",
+        reviews = database.get("SELECT review_id, user_name, review, date_posted, reviewer_id FROM profile_reviews INNER JOIN users ON profile_reviews.reviewer_id = users.user_id WHERE profile_id = %s ORDER BY date_posted DESC",
                                (user_id, ))
 
         return render_template("/profile.html", user=user, reviews=reviews)
@@ -652,3 +652,16 @@ def change_password():
         database.save("UPDATE users SET password_hash = %s WHERE user_id = %s", (generate_password_hash(new_password), session.get("user_id")))
 
         return redirect(url_for("profile", user_id=session.get("user_id")))
+
+
+@app.route("/delete_review/<int:review_id>/<int:profile_id>", methods=["POST"])
+def delete_review(review_id, profile_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))  
+
+    if session.get("is_admin"):
+        return redirect(url_for("apology", em="Only admins can delete user reviews"))
+    
+    database.save("DELETE FROM profile_reviews WHERE review_id = %s", (review_id, ))
+
+    return redirect(url_for("profile", user_id=profile_id))
