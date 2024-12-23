@@ -50,7 +50,10 @@ CREATE TABLE listings (
 );
 
 CREATE TABLE tags(
-    tag VARCHAR(255) NOT NULL
+    tag_id INT NOT NULL AUTO_INCREMENT,
+    tag VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (tag_id)
 );
 
 CREATE TABLE bids (
