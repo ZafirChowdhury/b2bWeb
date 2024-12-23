@@ -2,11 +2,15 @@ import mysql.connector
 
 import key
 
+ssl_ca = "/ca.pem"
+
 db = mysql.connector.connect(
-    host = "localhost",
-    user = "root",
+    host = "b2b-zafirchowdhury69-c101.j.aivencloud.com",
+    port = 10728,
+    user = "avnadmin",
     password = key.get_database_password(),
-    database = "test"
+    database = "b2b",
+    ssl_ca=ssl_ca
 )
 
 cur = db.cursor()
